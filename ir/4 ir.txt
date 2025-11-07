@@ -1,0 +1,70 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+# ✅ Step 1: Read CSV with correct encoding
+data = pd.read_csv("spam.csv", encoding='latin1')
+
+# ✅ Step 2: Clean extra unnamed columns (if any)
+data = data[['v1', 'v2']]
+data.columns = ['Label', 'EmailText']  # rename for clarity
+
+# ✅ Step 3: Split dataset into features (X) and labels (y)
+x_data = data['EmailText']
+y_data = data['Label']
+
+# ✅ Step 4: Convert text into numerical features
+cv = CountVectorizer()
+x = cv.fit_transform(x_data)
+
+# ✅ Step 5: Split into train and test sets
+x_train, x_test, y_train, y_test = train_test_split(x, y_data, test_size=0.2, random_state=42)
+
+# ✅ Step 6: Train model (Naive Bayes)
+model = MultinomialNB()
+model.fit(x_train, y_train)
+
+# ✅ Step 7: Predictions
+y_pred = model.predict(x_test)
+
+# ✅ Step 8: Evaluation
+print("✅ Accuracy:", accuracy_score(y_test, y_pred))
+print("\n🔹 Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("\n🔹 Classification Report:\n", classification_report(y_test, y_pred))
+
+# ✅ Step 9: Test with your own message
+sample = ["Congratulations! You have won a free vacation. Click here to claim."]
+sample_transformed = cv.transform(sample)
+prediction = model.predict(sample_transformed)
+print("\n💬 Sample Message Prediction:", prediction[0])
+
+
+
+
+
+
+
+OUTPUT:
+
+PS C:\Users\risha\Desktop\ir pr> & C:/Users/risha/AppData/Local/Programs/Python/Python313/python.exe "c:/Users/risha/Desktop/ir pr/4.py"
+✅ Accuracy: 0.97847533632287
+
+🔹 Confusion Matrix:
+ [[952  13]
+ [ 11 139]]
+
+🔹 Classification Report:
+               precision    recall  f1-score   support
+
+         ham       0.99      0.99      0.99       965
+        spam       0.91      0.93      0.92       150
+
+    accuracy                           0.98      1115
+   macro avg       0.95      0.96      0.95      1115
+weighted avg       0.98      0.98      0.98      1115
+
+
+💬 Sample Message Prediction: spam
+PS C:\Users\risha\Desktop\ir pr> 
