@@ -1,0 +1,13 @@
+﻿                     Practicle No:-5
+
+Title - Write a program for performing industrial data analysis using relevant tools and techniques.
+
+import pandas as pd 
+import matplotlib.pyplot as plt 
+df = pd.read_csv("sensor_data.csv") 
+print(df.describe()) 
+plt.plot(df["Time"], df["Temperature"]) 
+plt.xlabel("Time") 
+plt.ylabel("Temperature") 
+plt.title("Temperature Over Time") 
+plt.show(

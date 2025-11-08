@@ -1,0 +1,52 @@
+﻿Practicle NO: 4
+Title - Write a program for implementing security measures in an IIoT system.
+
+
+#include <LiquidCrystal.h>
+// Initialize the LCD with the pin numbers 
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+int V_GasSen = 0; 
+int V_TempSens = 0; 
+void setup() {
+pinMode(A0, INPUT); // Gas sensor pin 
+pinMode(A1, INPUT); // Temperature sensor pin 
+pinMode(7, OUTPUT); // Buzzer pin 
+pinMode(9, OUTPUT); // LED for gas detection
+pinMode(12, OUTPUT); // LED for temperature warning 
+lcd.begin(16, 2); // Initialize the LCD with 16 columns and 2 rows
+}
+void loop() {
+// Read gas sensor value 
+V_GasSen = analogRead(A0);
+// Read temperature sensor value and calculate temperature 
+V_TempSens = -40 + 0.488155 * (analogRead(A1) - 20);
+// Display temperature and gas status on the LCD 
+lcd.clear(); // Clear the LCD
+lcd.setCursor(0, 0); // Set cursor to the first row 
+lcd.print("Temperature: "); // Print temperature label 
+lcd.print(V_TempSens); // Print temperature value 
+lcd.print(" C"); // Print temperature unit
+lcd.setCursor(0, 1); // Set cursor to the second row 
+lcd.print("Gas: "); // Print gas label 
+lcd.print(V_GasSen); // Print gas sensor value
+// Check for alerts
+if (V_GasSen >= 250) {
+tone(7, 523, 1000); // Play tone if gas is detected 
+digitalWrite(9, HIGH); // Turn on the gas detection LED 
+lcd.clear();
+lcd.setCursor(0, 0); 
+lcd.print("ALERT: Gas Detected");
+} else {
+digitalWrite(9, LOW); // Turn off the gas detection LED
+}
+if (V_TempSens >= 70) {
+tone(7, 523, 1000); // Play tone if temperature exceeds the threshold 
+digitalWrite(12, HIGH); // Turn on the temperature warning LED 
+lcd.clear();
+lcd.setCursor(0, 0); 
+lcd.print("ALERT: Temp High");
+} else {
+digitalWrite(12, LOW); // Turn off the temperature warning LED
+}
+delay(1000); // Delay for one second
+}
